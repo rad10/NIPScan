@@ -79,7 +79,7 @@ for i in argv[1:]:
     elif (i == "-h" or i == "-help" or i == "--help"):
         help()
     elif (i[0] == "-"):
-        print("Error: "+i+" command not found\n")
+        print("Error: " + i + " command not found\n")
         help()
     else:
         ip.append(i)
@@ -91,7 +91,7 @@ if ln:
     localip = s.getsockname()[0]
     s.close()
     sets = localip.split(".")
-    ip.append(str(sets[0]+"."+sets[1]+"."+sets[2]+".0-255"))
+    ip.append(str(sets[0] + "." + sets[1] + "." + sets[2] + ".0-255"))
 #[/LocalHosts]#
 #[Files]#
 if bfle:
@@ -117,8 +117,8 @@ if bfle:
 #[Generator]#
 opts.sort()
 count = 0
-while count < len(opts)-1:
-    if opts[count] == opts[count+1]:
+while count < len(opts) - 1:
+    if opts[count] == opts[count + 1]:
         opts.pop(count)
     else:
         count += 1
@@ -126,9 +126,9 @@ while count < len(opts)-1:
 sopts = opts[0]
 sips = ip[0]
 for i in opts[1:]:
-    sopts += (" "+i)
+    sopts += (" " + i)
 for i in ip[1:]:
-    sips += (" "+i)
+    sips += (" " + i)
 # print(sopts)
 # print(sips)
 nm.scan(arguments=sopts, hosts=sips)
@@ -143,22 +143,22 @@ if visual:
         if alive and brute:
             try:
                 if (nm[host] > 0 and nm[host].hostname() != ""):
-                    print(nm[host].state()+"\t| " +
-                          nm[host].hostname()+" ("+host+")")
+                    print(nm[host].state() + "\t| " +
+                          nm[host].hostname() + " ("+host+")")
             except:
                 continue
         elif alive:
-            print(nm[host].state()+"\t| "+nm[host].hostname()+" ("+host+")")
+            print(nm[host].state() + "\t| " + nm[host].hostname() + " (" + host + ")")
         else:
             if nm[host].hostname() != "":
-                print(nm[host].hostname()+" ("+host+")")
+                print(nm[host].hostname() + " (" + host + ")")
 #[/Visual]#
 #[Text]#
 if text:
     for host in nm.all_hosts():
         if hn:
             if nm[host].hostname() != "":
-                print(host+":"+nm[host].hostname())
+                print(host + ":" + nm[host].hostname())
         else:
             print(host)
 #[/Text]#
