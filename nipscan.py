@@ -4,7 +4,7 @@ from sys import argv, exit
 import socket
 
 #[InitConfig]#
-nm = nmap.PortScanner()
+nm = nmap.PortScanner() #the NMap scanning object
 ip = []
 opts = ["-sL"]
 visual = True
@@ -84,16 +84,16 @@ for i in argv[1:]:
         ip.append(i)
 # [/Config]
 #[LocalHosts]#
-if ln:
-    s = socket.socket(socket.AF_INET, socket.SOCK_DGRAM)
-    s.connect(("8.8.8.8", 80))
-    localip = s.getsockname()[0]
-    s.close()
-    sets = localip.split(".")
-    ip.append(str(sets[0] + "." + sets[1] + "." + sets[2] + ".0-255"))
+if ln: # Local Network option
+    s = socket.socket(socket.AF_INET, socket.SOCK_DGRAM) # opens a socket on computer to connect to internet
+    s.connect(("8.8.8.8", 80)) # Talks to dns provider from google
+    localip = s.getsockname()[0] # this will get the local ip
+    s.close() # Turns off socket for possible later use
+    sets = localip.split(".") # splits 4 sections for use in next line
+    ip.append(str(sets[0] + "." + sets[1] + "." + sets[2] + ".0-255")) # 192.168.1.0-255
 #[/LocalHosts]#
 #[Files]#
-if bfle:
+if bfle: # this will grab ip addresses from an inputed file
     doc = str(open(fle, "r").read())
     if len(doc.split("\n")) > 1:
         for lines in doc.split("\n"):
@@ -116,7 +116,7 @@ if bfle:
 #[Generator]#
 opts.sort()
 count = 0
-while count < len(opts) - 1:
+while count < len(opts) - 1: # This whole section if to remove duplicate options
     if opts[count] == opts[count + 1]:
         opts.pop(count)
     else:
@@ -125,9 +125,9 @@ while count < len(opts) - 1:
 sopts = opts[0]
 sips = ip[0]
 for i in opts[1:]:
-    sopts += (" " + i)
+    sopts += (" " + i) # organizes all string options with a space separation
 for i in ip[1:]:
-    sips += (" " + i)
+    sips += (" " + i) # organizes all ip addresses with a space as separation
 
 nm.scan(arguments=sopts, hosts=sips)
 #[/Generator]#
@@ -144,7 +144,7 @@ if visual:
             except:
                 continue
         elif alive:
-            print(nm[host].state() + "\t| " + nm[host].hostname() + " (" + host + ")")
+            print(nm[host].state() + "\t| " + nm[host].hostname() + " (" + host + ")") # prints as [true/false] | hostname (ip address)
         else:
             if nm[host].hostname() != "":
                 print(nm[host].hostname() + " (" + host + ")")
@@ -152,7 +152,7 @@ if visual:
 #[Text]#
 if text:
     for host in nm.all_hosts():
-        if hn:
+        if hn: # Hostname
             if nm[host].hostname() != "":
                 print(host + ":" + nm[host].hostname())
         else:
