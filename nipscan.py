@@ -33,7 +33,6 @@ def help():
 
 #[/Help]#
 #[Config]#
-#a = argv[1:]
 if len(argv) <= 1:
     help()
 for i in argv[1:]:
@@ -129,11 +128,8 @@ for i in opts[1:]:
     sopts += (" " + i)
 for i in ip[1:]:
     sips += (" " + i)
-# print(sopts)
-# print(sips)
+
 nm.scan(arguments=sopts, hosts=sips)
-# print(nm.all_hosts())
-# print(nm.command_line())
 #[/Generator]#
 #[Visual]#
 if visual:
