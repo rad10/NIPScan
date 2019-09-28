@@ -8,5 +8,6 @@
         "**/CVS": true,
         "**/.DS_Store": true
     },
-    "workbench.settings.useSplitJSON": true
+    "workbench.settings.useSplitJSON": true,
+    "python.pythonPath": "/usr/bin/python"
 }
