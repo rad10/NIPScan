@@ -153,14 +153,17 @@ for i in range(len(ip)-1, 0, -1):
         ranges = ip[i].split(".")
         for p in ranges[:2]:
             if int(p) < 0 or int(p) > 255:
+                print("Pop: %s. Not a real ipv4 address" % ip[i])
                 ip.pop(i)
                 break
         else:
             if "-" in ranges[3]:
                 ipr = ranges[3].split("-")
                 if int(ipr[0]) < 0 or int(ipr[1]) > 255:
+                    print("Pop: %s. Not a real ipv4 address" % ip[i])
                     ip.pop(i)
             elif int(ranges[3]) < 0 or int(ranges[3]) > 255:
+                print("Pop: %s. Not a real ipv4 address" % ip[i])
                 ip.pop(i)
 if len(ip) == 0:
     print("Error: No valid targets given\n")
