@@ -1,8 +1,18 @@
 #!/usr/bin/python3
-import nmap
 from sys import argv, exit, stdin
 import socket
 import re
+
+# make sure library is installed
+try:
+    import nmap
+except:
+    print("Error: cannot find nmap library on platform.")
+    print("Please install nmap library from pip")
+    print("Please run either \"pip3 install python-nmap\"")
+    print("or \"sudo apt install python3-nmap\"")
+    print("Exiting now")
+    exit(1)
 
 #[InitConfig]#
 nm = nmap.PortScanner()  # the NMap scanning object
