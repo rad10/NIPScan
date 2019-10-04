@@ -1,4 +1,4 @@
-#!/usr/bin/python
+#!/usr/bin/python3
 import nmap
 from sys import argv, exit, stdin
 import socket
