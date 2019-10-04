@@ -47,7 +47,7 @@ for i in argv[1:]:
         continue
     i = i.lower()
     if (i == "-a" or i == "-alive" or i == "--alive"):
-        opts.append("-F")
+        opts.append("-sn")
         opts.remove("-sL")
         alive = True
     elif (i == "-vi" or i == "-visual" or i == "--visual"):
