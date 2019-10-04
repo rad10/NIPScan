@@ -1,6 +1,6 @@
 #!/usr/bin/python
 import nmap
-from sys import argv, exit
+from sys import argv, exit, stdin
 import socket
 import re
 
@@ -34,7 +34,7 @@ def help():
 
 #[/Help]#
 #[Config]#
-if len(argv) <= 1:
+if len(argv) <= 1 and stdin.isatty():
     help()
 for i in argv[1:]:
     if narg == "e":
@@ -92,6 +92,21 @@ for i in argv[1:]:
             ip.append(i)
 
 # [/Config]
+#[STDIN]#
+if not stdin.isatty():
+    addin = str(stdin.read()).split()
+    for term in addin:
+        reg = re.search(r"\d{1,3}.\d{1,3}.\d{1,3}.\d{1,3}", term)
+        if (reg != None):
+            ip.append(str(reg.group()))
+        else:
+            try:
+                socket.gethostbyname(term)
+            except socket.gaierror:
+                pass
+            else:
+                ip.append(term)
+#[/STDIN]#
 #[LocalHosts]#
 if ln:  # Local Network option
     # opens a socket on computer to connect to internet
@@ -125,18 +140,18 @@ opts.sort()
 # org to filter non ip addresses
 for i in range(len(ip)-1, 0, -1):
     if (re.search(r"\d{1,3}.\d{1,3}.\d{1,3}.(\d{1,3}-\d{1,3}|\d{1,3})", ip[i]) != None):
-    ranges = ip[i].split(".")
-    for p in ranges[:2]:
-        if int(p) < 0 or int(p) > 255:
-            ip.pop(i)
-            break
-    else:
-        if "-" in ranges[3]:
-            ipr = ranges[3].split("-")
-            if int(ipr[0]) < 0 or int(ipr[1]) > 255:
+        ranges = ip[i].split(".")
+        for p in ranges[:2]:
+            if int(p) < 0 or int(p) > 255:
                 ip.pop(i)
-        elif int(ranges[3]) < 0 or int(ranges[3]) > 255:
-            ip.pop(i)
+                break
+        else:
+            if "-" in ranges[3]:
+                ipr = ranges[3].split("-")
+                if int(ipr[0]) < 0 or int(ipr[1]) > 255:
+                    ip.pop(i)
+            elif int(ranges[3]) < 0 or int(ranges[3]) > 255:
+                ip.pop(i)
 if len(ip) == 0:
     print("Error: No valid targets given\n")
     help()
