@@ -2,6 +2,7 @@
 import nmap
 from sys import argv, exit
 import socket
+import re
 
 #[InitConfig]#
 nm = nmap.PortScanner()  # the NMap scanning object
@@ -80,7 +81,7 @@ for i in argv[1:]:
     elif (i[0] == "-"):
         print("Error: " + i + " command not found\n")
         help()
-    else:
+    elif(re.search(r"\d{1,3}.\d{1,3}.\d{1,3}.\d{1,3}", i) != None):
         ip.append(i)
 # [/Config]
 #[LocalHosts]#
@@ -97,26 +98,29 @@ if ln:  # Local Network option
 #[Files]#
 if bfle:  # this will grab ip addresses from an inputed file
     doc = str(open(fle, "r").read())
-    if len(doc.split("\n")) > 1:
-        for lines in doc.split("\n"):
-            ip.append(lines)
-    elif len(doc.split("\t")) > 1:
-        for tabs in doc.split("\t"):
-            ip.append(tabs)
-    elif len(doc.split(", ")) > 1:
-        for commaSpace in doc.split(", "):
-            ip.append(commaSpace)
-    elif len(doc.split(",")) > 1:
-        for comma in doc.split(","):
-            ip.append(comma)
-    elif len(doc.split(" ")) > 1:
-        for space in doc.split(" "):
-            ip.append(space)
-    else:
-        ip.append(doc)
+    matches = re.finditer(
+        r"\d{1,3}.\d{1,3}.\d{1,3}.(\d{1,3}-\d{1,3}|\d{1,3})", doc, re.MULTILINE)
+    for null, match in enumerate(matches, start=1):
+        # itll find all relevant ip addresses and add them accordingly
+        ip.append(str(match.group()))
 # [/Files]
 #[Generator]#
 opts.sort()
+
+# org to filter non ip addresses
+for i in range(len(ip)-1, 0, -1):
+    ranges = ip[i].split(".")
+    for p in ranges[:2]:
+        if int(p) < 0 or int(p) > 255:
+            ip.pop(i)
+            break
+    else:
+        if "-" in ranges[3]:
+            ipr = ranges[3].split("-")
+            if int(ipr[0]) < 0 or int(ipr[1]) > 255:
+                ip.pop(i)
+        elif int(ranges[3]) < 0 or int(ranges[3]) > 255:
+            ip.pop(i)
 count = 0
 while count < len(opts) - 1:  # This whole section if to remove duplicate options
     if opts[count] == opts[count + 1]:
