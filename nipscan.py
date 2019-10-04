@@ -137,6 +137,9 @@ for i in range(len(ip)-1, 0, -1):
                 ip.pop(i)
         elif int(ranges[3]) < 0 or int(ranges[3]) > 255:
             ip.pop(i)
+if len(ip) == 0:
+    print("Error: No valid targets given\n")
+    help()
 count = 0
 while count < len(opts) - 1:  # This whole section if to remove duplicate options
     if opts[count] == opts[count + 1]:
