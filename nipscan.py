@@ -83,6 +83,14 @@ for i in argv[1:]:
         help()
     elif(re.search(r"\d{1,3}.\d{1,3}.\d{1,3}.\d{1,3}", i) != None):
         ip.append(i)
+    else:
+        try:
+            socket.gethostbyname(i)
+        except socket.gaierror:
+            pass
+        else:
+            ip.append(i)
+
 # [/Config]
 #[LocalHosts]#
 if ln:  # Local Network option
@@ -97,18 +105,26 @@ if ln:  # Local Network option
 #[/LocalHosts]#
 #[Files]#
 if bfle:  # this will grab ip addresses from an inputed file
-    doc = str(open(fle, "r").read())
-    matches = re.finditer(
-        r"\d{1,3}.\d{1,3}.\d{1,3}.(\d{1,3}-\d{1,3}|\d{1,3})", doc, re.MULTILINE)
-    for null, match in enumerate(matches, start=1):
-        # itll find all relevant ip addresses and add them accordingly
-        ip.append(str(match.group()))
+    doc = str(open(fle, "r").read()).split()
+    for term in doc:
+        reg = re.search(
+            r"\d{1,3}.\d{1,3}.\d{1,3}.(\d{1,3}-\d{1,3}|\d{1,3})", term)
+        if (reg != None):
+            ip.append(str(reg.group()))
+        else:
+            try:
+                socket.gethostbyname(term)
+            except socket.gaierror:
+                pass
+            else:
+                ip.append(term)
 # [/Files]
 #[Generator]#
 opts.sort()
 
 # org to filter non ip addresses
 for i in range(len(ip)-1, 0, -1):
+    if (re.search(r"\d{1,3}.\d{1,3}.\d{1,3}.(\d{1,3}-\d{1,3}|\d{1,3})", ip[i]) != None):
     ranges = ip[i].split(".")
     for p in ranges[:2]:
         if int(p) < 0 or int(p) > 255:
