@@ -196,7 +196,7 @@ if parse.visual:
 #[Text]#
 if parse.text:
     for host in nm.all_hosts():
-        if hn:  # Hostname
+        if parse.hostname:  # Hostname
             if nm[host].hostname() != "":
                 print(host + ":" + nm[host].hostname())
         else:
