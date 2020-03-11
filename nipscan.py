@@ -20,9 +20,6 @@ nm = nmap.PortScanner()  # the NMap scanning object
 ip = []
 opts = ["-sL"]
 
-text = bfle = ln = alive = hn = brute = False
-narg = ""
-fle = ""
 
 #[/InitConfig]#
 #[Help]#
