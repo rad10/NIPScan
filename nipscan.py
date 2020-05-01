@@ -27,13 +27,13 @@ parser = argparse.ArgumentParser(
     prefix_chars="-+/", description="""this is a portscanner that takes in ip addresses
     and can do multiple things, including displaying the hostnames of each ip address,
     as well as filtering out dead ip addresses and only displaying currently alive ips.""")
-
+display = parser.add_mutually_exclusive_group()
 parser.add_argument("ips", nargs=argparse.REMAINDER, type=str,
                     metavar="ip_address", help="The IP Addresses to be scanned.")
 parser.add_argument("-a", "--alive", action="store_true",
                     help="Filters only alive ips into list")
-parser.add_argument("-vi", "--visual", action="store_true", default=True,
-                    help="Gives the visual desplay of results (defualt)")
+display.add_argument("-vi", "--visual", action="store_const", dest="display", default="visual", const="visual",
+                     help="Gives the visual desplay of results (defualt)")
 parser.add_argument("-r", dest="brute", action="store_true",
                     help="Reads ips and assumes hosts are all alive. for incase some ips block ping.")
 parser.add_argument("-f", "--file", type=argparse.FileType("r"),
@@ -42,8 +42,8 @@ parser.add_argument("-e", "--extra", nargs="+", metavar="options",
                     help="Adds extra options to nmap scanner")
 parser.add_argument("-ln", "--local", action="store_true",
                     help="Adds local network addresses to scanner")
-parser.add_argument("-t", "--text", action="store_true",
-                    help="Changes the scripts result so that it only displays the ips given. -a and -hn will change these from defualt input")
+display.add_argument("-t", "--text", action="store_const", dest="display", const="text",
+                     help="Changes the scripts result so that it only displays the ips given. -a and -hn will change these from defualt input")
 parser.add_argument("-hn", "--hostname", action="store_true",
                     help="Addition to -t that includes hostname to raw result")
 
@@ -56,10 +56,6 @@ parse = parser.parse_args()
 if parse.alive:
     opts.append("-sn")
     opts.remove("-sL")
-if parse.visual:
-    parse.text = False
-elif parse.text:
-    parse.visual = False
 if parse.brute:
     opts.append("-Pn")
 
@@ -174,7 +170,7 @@ for i in ip[1:]:
 nm.scan(arguments=sopts, hosts=sips)
 #[/Generator]#
 #[Visual]#
-if parse.visual:
+if (parse.display == "visual"):
     print("Hosts:")
     print("state | hostname (ipaddress)")
     for host in nm.all_hosts():
@@ -194,7 +190,7 @@ if parse.visual:
                 print(nm[host].hostname() + " (" + host + ")")
 #[/Visual]#
 #[Text]#
-if parse.text:
+if (parse.display == "text"):
     for host in nm.all_hosts():
         if parse.hostname:  # Hostname
             if nm[host].hostname() != "":
