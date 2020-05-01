@@ -30,22 +30,22 @@ parser = argparse.ArgumentParser(
 
 parser.add_argument("ips", nargs=argparse.REMAINDER, type=str,
                     metavar="ip_address", help="The IP Addresses to be scanned.")
-parser.add_argument("-a", "--alive", type=bool, nargs="?", default=False,
-                    const=True, help="Filters only alive ips into list")
-parser.add_argument("-vi", "--visual", type=bool, nargs="?", default=True,
-                    const=True, help="Gives the visual desplay of results (defualt)")
-parser.add_argument("-r", type=bool, default=False, nargs="?", dest="brute", const=True,
+parser.add_argument("-a", "--alive", action="store_true",
+                    help="Filters only alive ips into list")
+parser.add_argument("-vi", "--visual", action="store_true", default=True,
+                    help="Gives the visual desplay of results (defualt)")
+parser.add_argument("-r", dest="brute", action="store_true",
                     help="Reads ips and assumes hosts are all alive. for incase some ips block ping.")
 parser.add_argument("-f", "--file", type=argparse.FileType("r"),
                     metavar="input_file", help="Imports hosts from file, fan only be used once")
 parser.add_argument("-e", "--extra", nargs="+", metavar="options",
                     help="Adds extra options to nmap scanner")
-parser.add_argument("-ln", "--local", type=bool, nargs="?", default=False,
-                    const=True, help="Adds local network addresses to scanner")
-parser.add_argument("-t", "--text", type=bool, nargs="?", default=False, const=True,
+parser.add_argument("-ln", "--local", action="store_true",
+                    help="Adds local network addresses to scanner")
+parser.add_argument("-t", "--text", action="store_true",
                     help="Changes the scripts result so that it only displays the ips given. -a and -hn will change these from defualt input")
-parser.add_argument("-hn", "--hostname", type=bool, nargs="?", default=False,
-                    const=True, help="Addition to -t that includes hostname to raw result")
+parser.add_argument("-hn", "--hostname", action="store_true",
+                    help="Addition to -t that includes hostname to raw result")
 
 #[/Help]#
 #[Config]#
